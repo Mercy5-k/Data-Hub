@@ -8,3 +8,4 @@ werkzeug==3.0.3
 flask-migrate==4.0.7
 alembic==1.13.2
 marshmallow<4 
+psycopg2-binary
