@@ -10,8 +10,14 @@ def create_app():
     app.config.from_object("config.Config")
     
     # Enable CORS
-    frontend_url = os.getenv("FRONTEND_URL", "https://data-hdtb3rd3y-mercy5-ks-projects.vercel.app")
-    CORS(app, origins=[frontend_url])
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+    allowed_origins = [
+        frontend_url,
+        "https://data-hdtb3rd3y-mercy5-ks-projects.vercel.app",
+        "http://localhost:3000",  # For local development
+        "http://127.0.0.1:3000"   # Alternative local development
+    ]
+    CORS(app, origins=allowed_origins, supports_credentials=True)
     
     # Initialize extensions
     db.init_app(app)
@@ -19,6 +25,21 @@ def create_app():
     
     # Register blueprints
     app.register_blueprint(bp, url_prefix='/api')
+    
+    # Add root route
+    @app.route('/')
+    def root():
+        return jsonify({
+            'message': 'Data Hub API is running',
+            'version': '1.0.0',
+            'endpoints': {
+                'health': '/api/health',
+                'files': '/api/files',
+                'collections': '/api/collections',
+                'tags': '/api/tags',
+                'users': '/api/users'
+            }
+        })
     
     # Create tables
     with app.app_context():
