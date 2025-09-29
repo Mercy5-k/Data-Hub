@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://data-hub-4.onrender.com'
 
 async function request(endpoint, options = {}, isForm = false) {
   const res = await fetch(`${API_URL}${endpoint}`, {
