@@ -9,21 +9,20 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
 
-    # Enable CORS
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
     allowed_origins = [
         frontend_url,
-        "https://data-hdtb3rd3y-mercy5-ks-projects.vercel.app",
-        "http://localhost:3000",  # For local development
-        "http://127.0.0.1:3000"   # Alternative local development
+        "https://data-hub-one.vercel.app",
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000"   
     ]
     CORS(app, origins=allowed_origins, supports_credentials=True)
 
-    # Initialize extensions
+    
     db.init_app(app)
     ma.init_app(app)
 
-    # Register blueprints
+
     app.register_blueprint(bp, url_prefix='/api')
 
     # Add root route
@@ -43,11 +42,9 @@ def create_app():
     
     # Create tables
     with app.app_context():
-        # Create instance directory if it doesn't exist
         instance_dir = os.path.join(app.root_path, 'instance')
         os.makedirs(instance_dir, exist_ok=True)
 
-        # Create uploads directory
         uploads_dir = os.path.join(app.root_path, 'uploads')
         os.makedirs(uploads_dir, exist_ok=True)
 
