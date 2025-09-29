@@ -130,3 +130,5 @@ python seed.py         # populate seed data
 ```
 
 Seed contents include examples like users `alice`, `bob`, `carol`, files with tags (e.g., `finance`, `health`, `personal`), and collections that reference multiple files.
+
+Team Members
