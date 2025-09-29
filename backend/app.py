@@ -1,4 +1,4 @@
-from flask import Flask, jsonify     
+from flask import Flask,jsonify     
 from flask_cors import CORS
 from models import db
 from schemas import ma
@@ -7,16 +7,15 @@ import os
 
 def create_app():
     app = Flask(__name__)
-    # ✅ corrected module path for config
-    app.config.from_object("backend.config.Config")
+    app.config.from_object("config.Config")
 
     # Enable CORS
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
     allowed_origins = [
         frontend_url,
         "https://data-hdtb3rd3y-mercy5-ks-projects.vercel.app",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
+        "http://localhost:3000",  # For local development
+        "http://127.0.0.1:3000"   # Alternative local development
     ]
     CORS(app, origins=allowed_origins, supports_credentials=True)
 
@@ -25,29 +24,31 @@ def create_app():
     ma.init_app(app)
 
     # Register blueprints
-    app.register_blueprint(bp, url_prefix="/api")
+    app.register_blueprint(bp, url_prefix='/api')
 
-    # Root route
-    @app.route("/")
+    # Add root route
+    @app.route('/')
     def root():
         return jsonify({
-            "message": "Data Hub API is running",
-            "version": "1.0.0",
-            "endpoints": {
-                "health": "/api/health",
-                "files": "/api/files",
-                "collections": "/api/collections",
-                "tags": "/api/tags",
-                "users": "/api/users",
-            },
+            'message': 'Data Hub API is running',
+            'version': '1.0.0',
+            'endpoints': {
+                'health': '/api/health',
+                'files': '/api/files',
+                'collections': '/api/collections',
+                'tags': '/api/tags',
+                'users': '/api/users'
+            }
         })
-
-    # Create tables & ensure folders exist
+    
+    # Create tables
     with app.app_context():
-        instance_dir = os.path.join(app.root_path, "instance")
+        # Create instance directory if it doesn't exist
+        instance_dir = os.path.join(app.root_path, 'instance')
         os.makedirs(instance_dir, exist_ok=True)
 
-        uploads_dir = os.path.join(app.root_path, "uploads")
+        # Create uploads directory
+        uploads_dir = os.path.join(app.root_path, 'uploads')
         os.makedirs(uploads_dir, exist_ok=True)
 
         db.create_all()
